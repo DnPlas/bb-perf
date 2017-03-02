@@ -1,24 +1,29 @@
 # General Settings
 #
 set terminal pngcairo enhanced font 'Verdana,8'
-set xlabel 'Time'
+set xlabel 'Time (s)'
+set term png size 1000, 900
 
 # Procs
 set output 'vmstat-procs.png'
-set title 'Procs'
+set title 'Processing jobs waiting to run'
 set multiplot layout 2,1 rowsfirst
 plot data using 1 with lines title 'Runnable (r)'
 plot data using 2 with lines title 'Uninterruptible sleep (b)'
 unset multiplot
+unset ylabel
 
 # Memory
 set output 'vmstat-memory.png'
 set title 'Memory'
-set multiplot layout 2,2 rowsfirst
+set ylabel 'GB'
+set multiplot layout 4,1 rowsfirst
 plot data using 3 with lines title 'Virtual Memory Used (swpd)'
-plot data using 4 with lines title 'Idle Memory (free)'
-plot data using 5 with lines title 'Idle Memory (buff)'
-plot data using 6 with lines title 'Idle Memory (cache)'
+plot data using ($4/1048576.) with lines title 'Idle Memory (free)'
+plot data using ($6/1048576.) with lines title 'Idle Memory (cache)'
+set ylabel 'MB'
+plot data using ($5/1024.) with lines title 'Idle Memory (buff)'
+unset ylabel
 unset multiplot
 
 # Swap
@@ -33,9 +38,12 @@ unset multiplot
 set output 'vmstat-io.png'
 set title 'IO'
 set multiplot layout 2,1 rowsfirst
+set ylabel '# Blocks received'
 plot data using 9 with lines title  'Blocks received from a block device (bi)'
+set ylabel '# Blocks sent'
 plot data using 10 with lines title 'Blocks sent to a block device (bo)'
 unset multiplot
+unset ylabel
 
 # System
 set output 'vmstat-system.png'
